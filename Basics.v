@@ -1349,7 +1349,8 @@ Theorem identity_fn_applied_twice :
   (forall (x : bool), f x = x) ->
   forall (b : bool), f (f b) = b.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros f x b. rewrite -> x. rewrite -> x. reflexivity.
+Qed.
 
 (** [] *)
 
@@ -1359,7 +1360,14 @@ Proof.
     to the previous one but where the second hypothesis says that the
     function [f] has the property that [f x = negb x]. *)
 
-(* FILL IN HERE *)
+Theorem negation_fn_applied_twice :
+  forall (f : bool -> bool),
+  (forall (x : bool), f x = negb x) ->
+  forall (b : bool), f (f b) = b.
+Proof.
+  intros f x b. rewrite -> x. rewrite -> x. rewrite -> negb_involutive. reflexivity.
+Qed.
+
 (* The [Import] statement on the next line tells Coq to use the
    standard library String module.  We'll use strings more in later
    chapters, but for the moment we just need syntax for literal
@@ -1382,7 +1390,12 @@ Theorem andb_eq_orb :
   (andb b c = orb b c) ->
   b = c.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros [] [].
+  -reflexivity.
+  - simpl. intros H. rewrite -> H. reflexivity.
+  - simpl. intros H. rewrite -> H. reflexivity.
+  -reflexivity.
+Qed.
 
 (** [] *)
 
@@ -1421,11 +1434,19 @@ Inductive bin : Type :=
         for binary numbers, and a function [bin_to_nat] to convert
         binary numbers to unary numbers. *)
 
-Fixpoint incr (m:bin) : bin
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint incr (m:bin) : bin :=
+  match m with
+    |Z => B Z
+    |A n => B n
+    |B n => A (incr n)
+end.
 
-Fixpoint bin_to_nat (m:bin) : nat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint bin_to_nat (m:bin) : nat :=
+  match m with
+    |Z => O
+    |A n => 2 * bin_to_nat n
+    |B n => 1 + 2 * bin_to_nat n
+end.
 
 (**    (b) Write five unit tests [test_bin_incr1], [test_bin_incr2], etc.
         for your increment and binary-to-unary functions.  (A "unit
@@ -1435,7 +1456,11 @@ Fixpoint bin_to_nat (m:bin) : nat
         then converting it to unary should yield the same result as
         first converting it to unary and then incrementing. *)
 
-(* FILL IN HERE *)
+Example test_bin_incr1 : bin_to_nat(incr (A (A (A (B Z))))) = 9.
+Proof. simpl. reflexivity.  Qed.
+
+Example test_bin_incr2 : bin_to_nat(incr (B (A (B Z)))  ) = 6.
+Proof. simpl. reflexivity.  Qed.
 
 (* Do not modify the following line: *)
 Definition manual_grade_for_binary : option (nat*string) := None.
