@@ -2491,8 +2491,11 @@ Definition matches_regex m : Prop :=
 
     Complete the definition of [regex_match] so that it matches
     regexes. *)
-Fixpoint regex_match (s : string) (re : @reg_exp ascii) : bool
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Fixpoint regex_match (s : string) (re : @reg_exp ascii) : bool :=
+  match s with
+  | [] => (match_eps re)
+  | hd :: tl => regex_match tl (derive hd re)
+  end.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard, optional (regex_refl)  
@@ -2516,7 +2519,8 @@ Proof.
     induction s as [| hd tl IH].
     +
       intros. simpl in E. destruct (match_eps_refl re).
-      * apply H. * discriminate E.
+      * apply H. 
+      * discriminate E.
     +
       intros. simpl in E. rewrite (derive_corr hd re tl).
       apply IH in E. apply E.
@@ -2525,11 +2529,13 @@ Proof.
     induction s as [| hd tl IH].
     +
       intros. simpl in E. destruct (match_eps_refl re).
-      * discriminate E. * apply H0 in H. destruct H.
+      * discriminate E. 
+      * apply H0 in H. destruct H.
     +
       intros. simpl in E. rewrite (derive_corr hd re tl) in H.
       apply IH in E.
-      * apply E. * apply H.
+      * apply E.
+      * apply H.
 Qed.
 (** [] *)
 
