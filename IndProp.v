@@ -623,11 +623,10 @@ Inductive next_even : nat -> nat -> Prop :=
     Define an inductive binary relation [empty_relation] (on numbers)
     that never holds. *)
 
-(* 
 
   Inductive empty_relation : nat -> nat -> Prop:=
   | er : forall n m, empty_relation n m.
-
+(* 
     [] *)
 
 (** From the definition of [le], we can sketch the behaviors of
