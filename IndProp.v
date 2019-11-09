@@ -611,10 +611,10 @@ Inductive next_even : nat -> nat -> Prop :=
     Define an inductive binary relation [total_relation] that holds
     between every pair of natural numbers. *)
 
-(* 
-
   Inductive total_relation : nat -> nat -> Prop:=
   | tr : forall n m, total_relation n m.
+
+(* 
 
     [] *)
 
